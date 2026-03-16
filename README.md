@@ -29,7 +29,7 @@
 
 <br/>
 
-![Color Forge Preview](preview.png)
+![Color Forge Preview](preview/preview.png)
 
 <br/>
 
