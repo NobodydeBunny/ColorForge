@@ -1,15 +1,6 @@
 <div align="center">
 
-<br/>
-
-```
-  ██████╗ ██████╗ ██╗      ██████╗ ██████╗     ███████╗ ██████╗ ██████╗  ██████╗ ███████╗
- ██╔════╝██╔═══██╗██║     ██╔═══██╗██╔══██╗    ██╔════╝██╔═══██╗██╔══██╗██╔════╝ ██╔════╝
- ██║     ██║   ██║██║     ██║   ██║██████╔╝    █████╗  ██║   ██║██████╔╝██║  ███╗█████╗
- ██║     ██║   ██║██║     ██║   ██║██╔══██╗    ██╔══╝  ██║   ██║██╔══██╗██║   ██║██╔══╝
- ╚██████╗╚██████╔╝███████╗╚██████╔╝██║  ██║    ██║     ╚██████╔╝██║  ██║╚██████╔╝███████╗
-  ╚═════╝ ╚═════╝ ╚══════╝ ╚═════╝ ╚═╝  ╚═╝    ╚═╝      ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚══════╝
-```
+# 🎨 ColorForge
 
 ### **Material Theme Builder — for the Web**
 *Forge raw colors into complete, production-ready UI systems*
@@ -33,7 +24,7 @@
 
 <br/>
 
-[**🚀 Live Demo**](#) · [**📖 Docs**](#how-it-works) · [**🐛 Report Bug**](issues) · [**✨ Request Feature**](issues)
+[**🚀 Live Demo**](https://nobodydebunny.github.io/ColorForge/) · [**📖 Docs**](#how-it-works) · [**🐛 Report Bug**](issues) · [**✨ Request Feature**](issues)
 
 <br/>
 
@@ -203,7 +194,7 @@ Jump-start with handcrafted presets:
 
 **Color Forge is hosted live. Just open the link and start building.**
 
-> 🔗 **[color-forge.yourusername.github.io](https://yourusername.github.io/color-forge)**
+> 🔗 **[color-forge.yourusername.github.io](https://nobodydebunny.github.io/ColorForge/)**
 
 No signup. No download. No setup. Works on any modern browser.
 
