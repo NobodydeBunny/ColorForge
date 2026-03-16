@@ -16,7 +16,7 @@
 
 <br/>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-6200EE?style=for-the-badge)](LICENSE)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-6200EE?style=for-the-badge)](LICENSE)
 ![HTML5](https://img.shields.io/badge/HTML5-pure-03DAC6?style=for-the-badge&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-vanilla-6200EE?style=for-the-badge&logo=css3&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-03DAC6?style=for-the-badge&logo=javascript&logoColor=black)
@@ -199,33 +199,32 @@ Jump-start with handcrafted presets:
 
 ---
 
-## ✦ Getting Started
+## ✦ Try It — No Install Needed
 
-**No install. No build step. No dependencies.**
+**Color Forge is hosted live. Just open the link and start building.**
 
-### Option 1 — Open directly
+> 🔗 **[color-forge.yourusername.github.io](https://yourusername.github.io/color-forge)**
+
+No signup. No download. No setup. Works on any modern browser.
+
+---
+
+## ✦ Self-Host or Fork
+
+Want your own copy or want to contribute? It's 3 files.
+
 ```bash
 git clone https://github.com/yourusername/color-forge.git
 cd color-forge
-open index.html
+open index.html   # opens directly — no server needed
 ```
-Done. It runs entirely in your browser.
 
-### Option 2 — Serve locally
-```bash
-# Python
-python -m http.server 8080
+Or deploy your own fork to GitHub Pages in 60 seconds:
 
-# Node
-npx serve .
-```
-Then open `http://localhost:8080`
-
-### Option 3 — Deploy to GitHub Pages
 1. Fork this repo
 2. Go to **Settings → Pages**
 3. Set source to `main` branch, `/ (root)`
-4. Your theme builder is live at `https://yourusername.github.io/color-forge`
+4. Done — live at `https://yourusername.github.io/color-forge`
 
 ---
 
@@ -290,7 +289,9 @@ cd color-forge
 
 ## ✦ License
 
-MIT License — free to use, modify, and distribute.
+GNU General Public License v3.0 — you're free to use, study, modify, and distribute this software, but any derivative work must also remain open-source under the same license.
+
+See [`LICENSE`](LICENSE) for the full terms.
 
 ---
 
