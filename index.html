@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Color Forge — Material Theme Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ═══ HEADER ══════════════════════════════════════════════ -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="logo">
+        <div class="logo-mark">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2L3 7v10l9 5 9-5V7L12 2z" fill="white" opacity="0.95"/>
+            <path d="M12 2v20M3 7l9 5 9-5" stroke="rgba(0,0,0,0.3)" stroke-width="1.2" fill="none"/>
+          </svg>
+        </div>
+        <span class="logo-text">Color<strong>Forge</strong></span>
+      </div>
+      <div class="header-rule"></div>
+      <span class="header-tag">Material Theme Builder</span>
+    </div>
+    <div class="header-right">
+      <button class="hbtn hbtn-ghost" id="btnPreset">⬡ Presets</button>
+      <button class="hbtn hbtn-ghost" id="btnReset">↺ Reset</button>
+      <button class="hbtn hbtn-ghost" id="btnExportImg">⬇ Image</button>
+      <div class="export-split">
+        <button class="hbtn hbtn-accent" id="btnExport">Export</button>
+        <button class="hbtn hbtn-accent hbtn-arrow" id="btnExportDrop">▾</button>
+      </div>
+      <div class="drop-menu hidden" id="exportMenu">
+        <button data-fmt="css">CSS Variables</button>
+        <button data-fmt="json">JSON</button>
+        <button data-fmt="android">Android XML</button>
+        <button data-fmt="tailwind">Tailwind Config</button>
+      </div>
+    </div>
+    <!-- Preset flyout -->
+    <div class="preset-flyout hidden" id="presetFlyout">
+      <div class="flyout-title">Quick Presets</div>
+      <div class="preset-grid" id="presetGrid"></div>
+    </div>
+  </header>
+
+  <!-- ═══ LAYOUT ══════════════════════════════════════════════ -->
+  <div class="app-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+      <!-- Custom Palette Builder -->
+      <div class="sb-section">
+        <div class="sb-section-head">
+          <span class="sb-label">Custom Roles</span>
+          <span class="sb-hint">Add your own</span>
+        </div>
+        <div class="add-row">
+          <div class="add-swatch-wrap">
+            <div class="add-swatch" id="addSwatchPreview" style="--sc:#6200EE;"></div>
+            <input type="color" id="addColorPicker" value="#6200EE" />
+          </div>
+          <input type="text" id="addRoleName" placeholder="Role name…" class="add-name-input" />
+          <button class="add-btn" id="addRoleBtn">+</button>
+        </div>
+        <div class="custom-role-list" id="customRoleList">
+          <div class="no-custom">No custom roles yet</div>
+        </div>
+      </div>
+
+      <!-- Material Roles -->
+      <div class="sb-section">
+        <div class="sb-section-head">
+          <span class="sb-label">Material Roles</span>
+        </div>
+
+        <div class="role-group">
+          <div class="rg-label">Core</div>
+          <div class="role-row" data-role="primary">
+            <div class="role-swatch" id="sw-primary" style="--sc:#6200EE;">
+              <input type="color" id="pk-primary" value="#6200EE" />
+            </div>
+            <div class="role-info">
+              <span class="role-name">Primary</span>
+              <span class="role-hex mono" id="hx-primary">#6200EE</span>
+            </div>
+            <button class="copy-role" data-key="primary">⎘</button>
+          </div>
+          <div class="role-row" data-role="primaryVariant">
+            <div class="role-swatch" id="sw-primaryVariant" style="--sc:#3700B3;">
+              <input type="color" id="pk-primaryVariant" value="#3700B3" />
+            </div>
+            <div class="role-info">
+              <span class="role-name">Primary Variant</span>
+              <span class="role-hex mono" id="hx-primaryVariant">#3700B3</span>
+            </div>
+            <button class="auto-toggle active" id="auto-primaryVariant" data-key="primaryVariant">Auto</button>
+            <button class="copy-role" data-key="primaryVariant">⎘</button>
+          </div>
+          <div class="role-row" data-role="secondary">
+            <div class="role-swatch" id="sw-secondary" style="--sc:#03DAC6;">
+              <input type="color" id="pk-secondary" value="#03DAC6" />
+            </div>
+            <div class="role-info">
+              <span class="role-name">Secondary</span>
+              <span class="role-hex mono" id="hx-secondary">#03DAC6</span>
+            </div>
+            <button class="copy-role" data-key="secondary">⎘</button>
+          </div>
+          <div class="role-row" data-role="secondaryVariant">
+            <div class="role-swatch" id="sw-secondaryVariant" style="--sc:#018786;">
+              <input type="color" id="pk-secondaryVariant" value="#018786" />
+            </div>
+            <div class="role-info">
+              <span class="role-name">Secondary Variant</span>
+              <span class="role-hex mono" id="hx-secondaryVariant">#018786</span>
+            </div>
+            <button class="auto-toggle active" id="auto-secondaryVariant" data-key="secondaryVariant">Auto</button>
+            <button class="copy-role" data-key="secondaryVariant">⎘</button>
+          </div>
+        </div>
+
+        <div class="role-group">
+          <div class="rg-label">Surfaces</div>
+          <div class="role-row" data-role="background">
+            <div class="role-swatch checkered" id="sw-background" style="--sc:#FFFFFF;">
+              <input type="color" id="pk-background" value="#FFFFFF" />
+            </div>
+            <div class="role-info">
+              <span class="role-name">Background</span>
+              <span class="role-hex mono" id="hx-background">#FFFFFF</span>
+            </div>
+            <button class="copy-role" data-key="background">⎘</button>
+          </div>
+          <div class="role-row" data-role="surface">
+            <div class="role-swatch checkered" id="sw-surface" style="--sc:#FFFFFF;">
+              <input type="color" id="pk-surface" value="#FFFFFF" />
+            </div>
+            <div class="role-info">
+              <span class="role-name">Surface</span>
+              <span class="role-hex mono" id="hx-surface">#FFFFFF</span>
+            </div>
+            <button class="copy-role" data-key="surface">⎘</button>
+          </div>
+          <div class="role-row" data-role="error">
+            <div class="role-swatch" id="sw-error" style="--sc:#B00020;">
+              <input type="color" id="pk-error" value="#B00020" />
+            </div>
+            <div class="role-info">
+              <span class="role-name">Error</span>
+              <span class="role-hex mono" id="hx-error">#B00020</span>
+            </div>
+            <button class="copy-role" data-key="error">⎘</button>
+          </div>
+        </div>
+
+        <div class="role-group">
+          <div class="rg-label">On Colors <span class="auto-pill">auto</span></div>
+          <div class="role-row derived" data-role="onPrimary">
+            <div class="role-swatch" id="sw-onPrimary" style="--sc:#FFFFFF;"></div>
+            <div class="role-info">
+              <span class="role-name">On Primary</span>
+              <span class="role-hex mono" id="hx-onPrimary">#FFFFFF</span>
+            </div>
+            <button class="copy-role" data-key="onPrimary">⎘</button>
+          </div>
+          <div class="role-row derived" data-role="onSecondary">
+            <div class="role-swatch" id="sw-onSecondary" style="--sc:#000000;"></div>
+            <div class="role-info">
+              <span class="role-name">On Secondary</span>
+              <span class="role-hex mono" id="hx-onSecondary">#000000</span>
+            </div>
+            <button class="copy-role" data-key="onSecondary">⎘</button>
+          </div>
+          <div class="role-row derived" data-role="onBackground">
+            <div class="role-swatch" id="sw-onBackground" style="--sc:#000000;"></div>
+            <div class="role-info">
+              <span class="role-name">On Background</span>
+              <span class="role-hex mono" id="hx-onBackground">#000000</span>
+            </div>
+            <button class="copy-role" data-key="onBackground">⎘</button>
+          </div>
+          <div class="role-row derived" data-role="onSurface">
+            <div class="role-swatch" id="sw-onSurface" style="--sc:#000000;"></div>
+            <div class="role-info">
+              <span class="role-name">On Surface</span>
+              <span class="role-hex mono" id="hx-onSurface">#000000</span>
+            </div>
+            <button class="copy-role" data-key="onSurface">⎘</button>
+          </div>
+          <div class="role-row derived" data-role="onError">
+            <div class="role-swatch" id="sw-onError" style="--sc:#FFFFFF;"></div>
+            <div class="role-info">
+              <span class="role-name">On Error</span>
+              <span class="role-hex mono" id="hx-onError">#FFFFFF</span>
+            </div>
+            <button class="copy-role" data-key="onError">⎘</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Gradient Builder -->
+      <div class="sb-section">
+        <div class="sb-section-head">
+          <span class="sb-label">Gradient</span>
+        </div>
+        <div class="grad-pickers">
+          <div class="grad-end">
+            <div class="grad-swatch" id="gs1" style="--sc:#6200EE;">
+              <input type="color" id="gc1" value="#6200EE" />
+            </div>
+            <span class="grad-end-label mono">Start</span>
+          </div>
+          <div class="grad-arrow">→</div>
+          <div class="grad-end">
+            <div class="grad-swatch" id="gs2" style="--sc:#03DAC6;">
+              <input type="color" id="gc2" value="#03DAC6" />
+            </div>
+            <span class="grad-end-label mono">End</span>
+          </div>
+        </div>
+        <div class="grad-dirs" id="gradDirs">
+          <button class="gd active" data-dir="to right">→</button>
+          <button class="gd" data-dir="to bottom right">↘</button>
+          <button class="gd" data-dir="to bottom">↓</button>
+          <button class="gd" data-dir="135deg">↗</button>
+          <button class="gd" data-dir="radial">◎</button>
+        </div>
+        <div class="grad-preview-bar" id="gradPreviewBar">
+          <span class="mono" id="gradCSSText"></span>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-area">
+
+      <!-- Tabs -->
+      <div class="main-tabs">
+        <button class="mtab active" data-tab="palette">Palette</button>
+        <button class="mtab" data-tab="preview">UI Preview</button>
+        <button class="mtab" data-tab="code">Export Code</button>
+      </div>
+
+      <!-- TAB: PALETTE -->
+      <div class="tab-pane active" id="tab-palette">
+
+        <div class="pane-section">
+          <div class="pane-label">Core Palette</div>
+          <div class="card-grid grid-4" id="grid-core"></div>
+        </div>
+
+        <div class="pane-section">
+          <div class="pane-label">Surfaces &amp; Status</div>
+          <div class="card-grid grid-3" id="grid-surface"></div>
+        </div>
+
+        <div class="pane-section">
+          <div class="pane-label">On Colors</div>
+          <div class="card-grid grid-5" id="grid-on"></div>
+        </div>
+
+        <div class="pane-section" id="customPaletteSection" style="display:none;">
+          <div class="pane-label">Custom Roles</div>
+          <div class="card-grid grid-4" id="grid-custom"></div>
+        </div>
+
+        <div class="pane-section">
+          <div class="pane-label">Gradient Preview</div>
+          <div class="grad-full-preview" id="gradFullPreview">
+            <span class="mono" id="gradFullText"></span>
+          </div>
+        </div>
+
+        <div class="pane-section">
+          <div class="pane-label">Contrast Check <span style="font-weight:400;opacity:.5;font-size:11px;">WCAG</span></div>
+          <div class="contrast-grid" id="contrastGrid"></div>
+        </div>
+
+      </div>
+
+      <!-- TAB: PREVIEW -->
+      <div class="tab-pane" id="tab-preview">
+        <div class="preview-outer">
+          <div class="preview-frame-label">Live UI Preview</div>
+          <div class="phone-shell">
+            <div class="phone-notch"></div>
+            <div class="phone-screen" id="phoneScreen"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: CODE -->
+      <div class="tab-pane" id="tab-code">
+        <div class="code-fmt-tabs" id="codeFmtTabs">
+          <button class="cfmt active" data-fmt="css">CSS</button>
+          <button class="cfmt" data-fmt="json">JSON</button>
+          <button class="cfmt" data-fmt="android">Android XML</button>
+          <button class="cfmt" data-fmt="tailwind">Tailwind</button>
+        </div>
+        <div class="code-block">
+          <button class="code-copy-btn" id="codeCopyBtn">Copy</button>
+          <pre id="codeOut"></pre>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- EXPORT MODAL -->
+  <div class="modal-bg hidden" id="exportModal">
+    <div class="modal-box">
+      <div class="modal-top">
+        <span>Export Theme</span>
+        <button id="modalClose">✕</button>
+      </div>
+      <div class="modal-fmt-tabs" id="modalFmtTabs">
+        <button class="mfmt active" data-fmt="css">CSS</button>
+        <button class="mfmt" data-fmt="json">JSON</button>
+        <button class="mfmt" data-fmt="android">Android</button>
+        <button class="mfmt" data-fmt="tailwind">Tailwind</button>
+      </div>
+      <div class="modal-code-area">
+        <pre id="modalCodeOut"></pre>
+      </div>
+      <div class="modal-foot">
+        <button class="hbtn hbtn-ghost" id="modalCopy">Copy to Clipboard</button>
+        <button class="hbtn hbtn-accent" id="modalDownload">↓ Download File</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
