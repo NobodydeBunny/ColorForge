@@ -95,6 +95,61 @@ body {
 .header-rule { width: 1px; height: 18px; background: var(--border2); }
 .header-tag  { font-size: 12px; color: var(--text-3); font-weight: 600; letter-spacing: .3px; }
 
+.title-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.header-tag-input {
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .3px;
+  color: var(--text-3);
+  background: transparent;
+  border: none;
+  outline: none;
+  border-bottom: 1px dashed transparent;
+  transition: border-color .2s, color .2s;
+  width: 190px;
+  caret-color: var(--teal);
+}
+.header-tag-input:hover {
+  border-bottom-color: var(--border2);
+  color: var(--text-2);
+}
+.header-tag-input:focus {
+  color: var(--text);
+  border-bottom-color: var(--teal);
+}
+
+.title-hint {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .3px;
+  color: var(--text-3);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity .4s;
+}
+.title-hint::before {
+  content: '✎';
+  font-size: 11px;
+  color: var(--teal);
+  opacity: .7;
+}
+.title-hint.hidden {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+}
+
 /* Header buttons */
 .hbtn {
   display: inline-flex; align-items: center; gap: 5px;

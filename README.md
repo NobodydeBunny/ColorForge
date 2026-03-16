@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🎨 ColorForge
+<img src="assets/icon.png" alt="Color Forge logo" width="400">
 
 ### **Material Theme Builder — for the Web**
 *Forge raw colors into complete, production-ready UI systems*

@@ -522,9 +522,11 @@ function exportImage() {
   ctx.fillStyle = '#0f0f13';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+  const titleEl   = document.getElementById('appTitle');
+  const titleText = (titleEl ? titleEl.value.trim() : '') || 'Material Theme Builder';
   ctx.fillStyle = '#f0f0f6';
   ctx.font = 'bold 20px "Syne", sans-serif';
-  ctx.fillText('Color Forge — Material Theme', PAD, 38);
+  ctx.fillText('Color Forge — ' + titleText, PAD, 38);
 
   all.forEach(({ hex, label }, i) => {
     const col = i % COLS;
@@ -863,6 +865,22 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       renderAll();
     });
+  });
+
+  // Title rename hint — shows every load, hides once user actually changes the value
+  const titleInput = document.getElementById('appTitle');
+  const titleHint  = document.getElementById('titleHint');
+  localStorage.removeItem('cf-title-seen'); // clear any stuck state
+
+  titleInput.addEventListener('input', () => {
+    titleHint.classList.add('hidden');
+  });
+  titleInput.addEventListener('blur', () => {
+    if (titleInput.value.trim() !== 'Material Theme Builder') {
+      titleHint.classList.add('hidden');
+    } else {
+      titleHint.classList.remove('hidden');
+    }
   });
 
   // Initial render
