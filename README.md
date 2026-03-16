@@ -175,16 +175,16 @@ Jump-start with handcrafted presets:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                                                                   │
-│   You pick     →   Color Forge    →   Complete theme system      │
-│   a color          calculates         ready to ship              │
-│                                                                   │
+│                                                                 │
+│   You pick     →   Color Forge    →   Complete theme system     │
+│   a color          calculates         ready to ship             │
+│                                                                 │
 │   #6200EE      →   variants       →   CSS / JSON / XML / JS     │
-│                    on-colors                                      │
-│                    contrast        →   Live UI preview           │
-│                    gradients                                      │
-│                                   →   Exportable PNG             │
-│                                                                   │
+│                    on-colors                                    │
+│                    contrast        →   Live UI preview          │
+│                    gradients                                    │
+│                                   →   Exportable PNG            │
+│                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -294,6 +294,6 @@ See [`LICENSE`](LICENSE) for the full terms.
 
 <br/>
 
-[![Star this repo](https://img.shields.io/github/stars/yourusername/color-forge?style=social)](https://github.com/yourusername/color-forge)
+[![Star this repo](https://img.shields.io/github/stars/yourusername/color-forge?style=social)](https://github.com/nobodydebunny/colorForge)
 
 </div>
