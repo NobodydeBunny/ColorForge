@@ -24,7 +24,7 @@
 
 <br/>
 
-[**🚀 Live Demo**](https://nobodydebunny.github.io/ColorForge/) · [**📖 Docs**](#how-it-works) · [**🐛 Report Bug**](issues) · [**✨ Request Feature**](issues)
+[**🚀 Live Demo**](https://nobodydebunny.github.io/ColorForge/) · [**🐛 Report Bug**](issues) · [**✨ Request Feature**](issues)
 
 <br/>
 
