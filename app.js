@@ -16,12 +16,13 @@ let matTheme = {
   error:            '#B00020',
 };
 
-let customRoles = []; // [{name, hex}]
-
-let gradState = { c1: '#6200EE', c2: '#03DAC6', dir: 'to right' };
-
+let customRoles = [];
+let gradState   = { c1: '#6200EE', c2: '#03DAC6', dir: 'to right' };
 let autoVariant = { primaryVariant: true, secondaryVariant: true };
+let modalFmt    = 'css';
+let codeFmt     = 'css';
 
+// ── AUTO VARIANT ───────────────────────────────────────────────
 function calcVariant(hex) {
   const { r, g, b } = hexToRgb(hex);
   return '#' + [r, g, b]
@@ -40,9 +41,6 @@ function syncAutoButtons() {
     }
   });
 }
-
-let modalFmt = 'css';
-let codeFmt  = 'css';
 
 // ── ROLE META ──────────────────────────────────────────────────
 const ROLE_LABELS = {
@@ -65,12 +63,12 @@ const GRID_SURFACE = ['background','surface','error'];
 const GRID_ON      = ['onPrimary','onSecondary','onBackground','onSurface','onError'];
 
 const CONTRAST_PAIRS = [
-  { fg:'onPrimary',    bg:'primary',    label:'On Primary'    },
-  { fg:'onSecondary',  bg:'secondary',  label:'On Secondary'  },
-  { fg:'onBackground', bg:'background', label:'On Background' },
-  { fg:'onSurface',    bg:'surface',    label:'On Surface'    },
-  { fg:'onError',      bg:'error',      label:'On Error'      },
-  { fg:'primary',      bg:'background', label:'Primary on Bg' },
+  { fg:'onPrimary',    bg:'primary',    label:'On Primary'     },
+  { fg:'onSecondary',  bg:'secondary',  label:'On Secondary'   },
+  { fg:'onBackground', bg:'background', label:'On Background'  },
+  { fg:'onSurface',    bg:'surface',    label:'On Surface'     },
+  { fg:'onError',      bg:'error',      label:'On Error'       },
+  { fg:'primary',      bg:'background', label:'Primary on Bg'  },
   { fg:'secondary',    bg:'background', label:'Secondary on Bg'},
   { fg:'error',        bg:'surface',    label:'Error on Surface'},
 ];
@@ -78,23 +76,23 @@ const CONTRAST_PAIRS = [
 // ── COLOR UTILS ────────────────────────────────────────────────
 function hexToRgb(hex) {
   hex = hex.replace('#','');
-  if (hex.length === 3) hex = hex.split('').map(c=>c+c).join('');
+  if (hex.length === 3) hex = hex.split('').map(c => c+c).join('');
   const n = parseInt(hex, 16);
   return { r:(n>>16)&255, g:(n>>8)&255, b:n&255 };
 }
 
 function luminance(hex) {
-  const {r,g,b} = hexToRgb(hex);
-  return [r,g,b].reduce((acc,v,i) => {
+  const { r, g, b } = hexToRgb(hex);
+  return [r, g, b].reduce((acc, v, i) => {
     v /= 255;
-    v = v <= 0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4);
-    return acc + v * [0.2126,0.7152,0.0722][i];
+    v = v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+    return acc + v * [0.2126, 0.7152, 0.0722][i];
   }, 0);
 }
 
 function contrastRatio(h1, h2) {
   const l1 = luminance(h1), l2 = luminance(h2);
-  return (Math.max(l1,l2)+0.05) / (Math.min(l1,l2)+0.05);
+  return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
 }
 
 function onColor(hex) {
@@ -107,10 +105,10 @@ function wcagGrade(ratio) {
   return { label:'Fail', cls:'grade-fail' };
 }
 
-function toKebab(s) { return s.replace(/([A-Z])/g,'-$1').toLowerCase().replace(/^-/,''); }
-function toSnake(s) { return s.replace(/([A-Z])/g,'_$1').toLowerCase().replace(/^_/,''); }
+function toKebab(s) { return s.replace(/([A-Z])/g, '-$1').toLowerCase().replace(/^-/, ''); }
+function toSnake(s) { return s.replace(/([A-Z])/g, '_$1').toLowerCase().replace(/^_/, ''); }
 
-// ── DERIVED COLORS ─────────────────────────────────────────────
+// ── DERIVED & FULL PALETTE ─────────────────────────────────────
 function getDerived() {
   return {
     onPrimary:    onColor(matTheme.primary),
@@ -125,7 +123,7 @@ function getFullPalette() {
   return { ...matTheme, ...getDerived() };
 }
 
-// ── GRADIENT CSS ───────────────────────────────────────────────
+// ── GRADIENT ───────────────────────────────────────────────────
 function buildGradCSS() {
   const { c1, c2, dir } = gradState;
   return dir === 'radial'
@@ -136,7 +134,6 @@ function buildGradCSS() {
 // ── SIDEBAR SYNC ───────────────────────────────────────────────
 function syncSidebar() {
   const derived = getDerived();
-  const full = { ...matTheme, ...derived };
 
   MAT_KEYS.forEach(key => {
     const sw = document.getElementById(`sw-${key}`);
@@ -154,7 +151,6 @@ function syncSidebar() {
     if (hx) hx.textContent = val.toUpperCase();
   });
 
-  // gradient
   const grad = buildGradCSS();
   const bar  = document.getElementById('gradPreviewBar');
   const txt  = document.getElementById('gradCSSText');
@@ -166,12 +162,12 @@ function syncSidebar() {
   if (gs2) gs2.style.setProperty('--sc', gradState.c2);
 }
 
-// ── THEME CARD HTML ────────────────────────────────────────────
+// ── THEME CARDS ────────────────────────────────────────────────
 let cardCounter = 0;
 function makeCard(key, hex, label) {
   cardCounter++;
-  const num = cardCounter;
-  const on = onColor(hex);
+  const num   = cardCounter;
+  const on    = onColor(hex);
   const numBg = on === '#FFFFFF' ? 'rgba(255,255,255,.15)' : 'rgba(0,0,0,.12)';
   return `
     <div class="theme-card">
@@ -189,10 +185,10 @@ function makeCard(key, hex, label) {
   `;
 }
 
-// ── RENDER PALETTE GRIDS ───────────────────────────────────────
+// ── RENDER PALETTE ─────────────────────────────────────────────
 function renderPalette() {
   cardCounter = 0;
-  const full = getFullPalette();
+  const full  = getFullPalette();
 
   document.getElementById('grid-core').innerHTML =
     GRID_CORE.map(k => makeCard(k, full[k], ROLE_LABELS[k])).join('');
@@ -203,7 +199,6 @@ function renderPalette() {
   document.getElementById('grid-on').innerHTML =
     GRID_ON.map(k => makeCard(k, full[k], ROLE_LABELS[k])).join('');
 
-  // Custom roles
   const custSection = document.getElementById('customPaletteSection');
   const custGrid    = document.getElementById('grid-custom');
   if (customRoles.length > 0) {
@@ -214,7 +209,6 @@ function renderPalette() {
     custGrid.innerHTML = '';
   }
 
-  // gradient
   const grad = buildGradCSS();
   const fp   = document.getElementById('gradFullPreview');
   const ft   = document.getElementById('gradFullText');
@@ -251,21 +245,15 @@ function renderContrast() {
 // ── UI PREVIEW ─────────────────────────────────────────────────
 function renderPreview() {
   const p = getFullPalette();
-
   document.getElementById('phoneScreen').innerHTML = `
     <div style="background:${p.background};color:${p.onBackground};min-height:680px;position:relative;font-family:'Syne',sans-serif;">
-
       <div class="pv-statusbar" style="background:${p.primary};"></div>
-
       <div class="pv-appbar" style="background:${p.primary};color:${p.onPrimary};">
         <span style="font-size:20px;">☰</span>
         <span class="pv-appbar-title">My App</span>
         <div class="pv-appbar-icon" style="background:rgba(255,255,255,.15);">◎</div>
       </div>
-
       <div class="pv-body">
-
-        <!-- Hero card -->
         <div class="pv-card" style="background:${p.surface};color:${p.onSurface};box-shadow:0 2px 10px rgba(0,0,0,.1);">
           <div class="pv-card-title">Welcome back</div>
           <div class="pv-card-sub">Here's what's happening today</div>
@@ -274,16 +262,12 @@ function renderPreview() {
             <div class="pv-btn" style="background:${p.secondary};color:${p.onSecondary};">Secondary</div>
           </div>
         </div>
-
-        <!-- Chips -->
         <div class="pv-chips">
           <div class="pv-chip" style="background:${p.primary};color:${p.onPrimary};">Design</div>
           <div class="pv-chip" style="background:${p.primaryVariant};color:${onColor(p.primaryVariant)};">System</div>
           <div class="pv-chip" style="background:${p.secondary};color:${p.onSecondary};">Colors</div>
           <div class="pv-chip" style="background:${p.secondaryVariant};color:${onColor(p.secondaryVariant)};">Theme</div>
         </div>
-
-        <!-- Form card -->
         <div class="pv-card" style="background:${p.surface};color:${p.onSurface};box-shadow:0 2px 10px rgba(0,0,0,.1);">
           <div class="pv-card-title">Sign In</div>
           <input class="pv-input" style="background:${p.background};color:${p.onBackground};border-color:${p.primary};" placeholder="Email address" readonly />
@@ -293,41 +277,23 @@ function renderPreview() {
             <div class="pv-btn pv-btn-outline" style="border:1.5px solid ${p.primary};color:${p.primary};">Register</div>
           </div>
         </div>
-
-        <!-- Error banner -->
         <div class="pv-error-bar" style="background:${p.error};color:${p.onError};">
           <span style="font-size:16px;">⚠</span>
           Invalid credentials — please try again.
         </div>
-
-        <!-- Variant card -->
         <div class="pv-card" style="background:${p.primaryVariant};color:${onColor(p.primaryVariant)};box-shadow:0 2px 10px rgba(0,0,0,.15);">
           <div class="pv-card-title">Pro Feature</div>
           <div class="pv-card-sub">Unlock all capabilities</div>
           <div class="pv-btn" style="background:${p.secondary};color:${p.onSecondary};border-radius:8px;text-align:center;padding:9px;">Upgrade Now</div>
         </div>
-
-        <!-- Nav -->
         <div class="pv-nav" style="background:${p.surface};color:${p.onSurface};border-top-color:${p.background};">
-          <div class="pv-nav-item" style="color:${p.primary};">
-            <div class="pv-nav-ico">⌂</div><span>Home</span>
-          </div>
-          <div class="pv-nav-item">
-            <div class="pv-nav-ico">⊞</div><span>Explore</span>
-          </div>
-          <div class="pv-nav-item">
-            <div class="pv-nav-ico">♡</div><span>Saved</span>
-          </div>
-          <div class="pv-nav-item">
-            <div class="pv-nav-ico">◎</div><span>Profile</span>
-          </div>
+          <div class="pv-nav-item" style="color:${p.primary};"><div class="pv-nav-ico">⌂</div><span>Home</span></div>
+          <div class="pv-nav-item"><div class="pv-nav-ico">⊞</div><span>Explore</span></div>
+          <div class="pv-nav-item"><div class="pv-nav-ico">♡</div><span>Saved</span></div>
+          <div class="pv-nav-item"><div class="pv-nav-ico">◎</div><span>Profile</span></div>
         </div>
-
       </div>
-
-      <!-- FAB -->
       <div class="pv-fab" style="background:${p.secondary};color:${p.onSecondary};">+</div>
-
     </div>
   `;
 }
@@ -339,7 +305,7 @@ function renderCustomRoleList() {
     list.innerHTML = '<div class="no-custom">No custom roles yet</div>';
     return;
   }
-  list.innerHTML = customRoles.map((r,i) => `
+  list.innerHTML = customRoles.map((r, i) => `
     <div class="custom-role-item">
       <div class="custom-swatch" style="background:${r.hex};"></div>
       <span class="custom-name">${r.name}</span>
@@ -350,10 +316,10 @@ function renderCustomRoleList() {
 }
 
 function addCustomRole() {
-  const nameEl  = document.getElementById('addRoleName');
-  const pickEl  = document.getElementById('addColorPicker');
-  const name    = nameEl.value.trim();
-  const hex     = pickEl.value;
+  const nameEl = document.getElementById('addRoleName');
+  const pickEl = document.getElementById('addColorPicker');
+  const name   = nameEl.value.trim();
+  const hex    = pickEl.value;
   if (!name) { showToast('Enter a role name'); return; }
   if (customRoles.find(r => r.name.toLowerCase() === name.toLowerCase())) {
     showToast('Role name already exists'); return;
@@ -376,46 +342,42 @@ function deleteCustomRole(i) {
 // ── EXPORT CODE ────────────────────────────────────────────────
 function s(cls, txt) { return `<span class="${cls}">${txt}</span>`; }
 
-function generateCSS(highlight = true) {
-  const full  = getFullPalette();
-  const extra = customRoles.map(r => [toKebab(r.name), r.hex.toUpperCase()]);
-  const wrap  = highlight ? s : (_,t) => t;
-
+function generateCSS() {
+  const full = getFullPalette();
   const vars = [
-    ...Object.entries(full).map(([k,v]) => [toKebab(k), v.toUpperCase()]),
-    ...extra,
-  ].map(([k,v]) => `  ${wrap('t-var','--'+k)}: ${wrap('t-val',v)};`);
-
+    ...Object.entries(full).map(([k, v]) => [toKebab(k), v.toUpperCase()]),
+    ...customRoles.map(r => [toKebab(r.name), r.hex.toUpperCase()]),
+  ].map(([k, v]) => `  ${s('t-var','--'+k)}: ${s('t-val',v)};`);
   return [
-    wrap('t-cmt','/* Color Forge — Generated Material Theme */'),
-    wrap('t-sel',':root') + ' {',
+    s('t-cmt','/* Color Forge — Generated Material Theme */'),
+    s('t-sel',':root') + ' {',
     ...vars,
     '}',
     '',
-    wrap('t-cmt','/* Example usage */'),
-    wrap('t-sel','.btn-primary') + ' {',
-    `  ${wrap('t-attr','background')}: ${wrap('t-var','var(--primary)')};`,
-    `  ${wrap('t-attr','color')}: ${wrap('t-var','var(--on-primary)')};`,
+    s('t-cmt','/* Example usage */'),
+    s('t-sel','.btn-primary') + ' {',
+    `  ${s('t-attr','background')}: ${s('t-var','var(--primary)')};`,
+    `  ${s('t-attr','color')}: ${s('t-var','var(--on-primary)')};`,
     '}',
   ].join('\n');
 }
 
 function generateJSON() {
-  const full  = getFullPalette();
-  const obj   = { colors: {}, custom: {}, meta: { tool:'Color Forge', version:'2.0' } };
-  Object.entries(full).forEach(([k,v]) => { obj.colors[k] = v.toUpperCase(); });
+  const full = getFullPalette();
+  const obj  = { colors: {}, custom: {}, meta: { tool:'Color Forge', version:'2.0' } };
+  Object.entries(full).forEach(([k, v]) => { obj.colors[k] = v.toUpperCase(); });
   customRoles.forEach(r => { obj.custom[r.name] = r.hex.toUpperCase(); });
   return JSON.stringify(obj, null, 2)
-    .replace(/"([\w\s]+)":/g, (_,k) => `${s('t-key','"'+k+'"')}:`)
-    .replace(/: "([^"]+)"/g, (_,v) => `: ${s('t-str','"'+v+'"')}`);
+    .replace(/"([\w\s]+)":/g, (_, k) => `${s('t-key','"'+k+'"')}:`)
+    .replace(/: "([^"]+)"/g,  (_, v) => `: ${s('t-str','"'+v+'"')}`);
 }
 
 function generateAndroid() {
-  const full   = getFullPalette();
-  const lines  = [
+  const full  = getFullPalette();
+  const lines = [
     s('t-tag','<?xml') + ` ${s('t-attr','version')}=${s('t-str','"1.0"')} ${s('t-attr','encoding')}=${s('t-str','"utf-8"')}${s('t-tag','?>')}`,
     s('t-tag','<resources>'),
-    ...Object.entries(full).map(([k,v]) =>
+    ...Object.entries(full).map(([k, v]) =>
       `  ${s('t-tag','<color')} ${s('t-attr','name')}=${s('t-str','"'+toSnake(k)+'"')}>${s('t-val',v.toUpperCase())}${s('t-tag','</color>')}`
     ),
     ...customRoles.map(r =>
@@ -429,7 +391,7 @@ function generateAndroid() {
 function generateTailwind() {
   const full    = getFullPalette();
   const entries = [
-    ...Object.entries(full).map(([k,v]) =>
+    ...Object.entries(full).map(([k, v]) =>
       `        ${s('t-key',"'"+toKebab(k)+"'")}: ${s('t-str',"'"+v.toUpperCase()+"'")},`
     ),
     ...customRoles.map(r =>
@@ -452,40 +414,48 @@ function generateTailwind() {
 
 function getRaw(fmt) {
   const full = getFullPalette();
-  switch(fmt) {
+  switch (fmt) {
     case 'css': {
-      const vars = [...Object.entries(full).map(([k,v]) => `  --${toKebab(k)}: ${v.toUpperCase()};`),
-                    ...customRoles.map(r => `  --${toKebab(r.name)}: ${r.hex.toUpperCase()};`)];
-      return { text: ['/* Color Forge */', ':root {', ...vars, '}'].join('\n'), ext:'css' };
+      const vars = [
+        ...Object.entries(full).map(([k, v]) => `  --${toKebab(k)}: ${v.toUpperCase()};`),
+        ...customRoles.map(r => `  --${toKebab(r.name)}: ${r.hex.toUpperCase()};`),
+      ];
+      return { text: ['/* Color Forge */', ':root {', ...vars, '}'].join('\n'), ext: 'css' };
     }
     case 'json': {
-      const obj = { colors:{}, custom:{}, meta:{tool:'Color Forge',version:'2.0'} };
-      Object.entries(full).forEach(([k,v])=>{ obj.colors[k]=v.toUpperCase(); });
-      customRoles.forEach(r=>{ obj.custom[r.name]=r.hex.toUpperCase(); });
-      return { text: JSON.stringify(obj,null,2), ext:'json' };
+      const obj = { colors:{}, custom:{}, meta:{ tool:'Color Forge', version:'2.0' } };
+      Object.entries(full).forEach(([k, v]) => { obj.colors[k] = v.toUpperCase(); });
+      customRoles.forEach(r => { obj.custom[r.name] = r.hex.toUpperCase(); });
+      return { text: JSON.stringify(obj, null, 2), ext: 'json' };
     }
     case 'android': {
-      const lines = ['<?xml version="1.0" encoding="utf-8"?>','<resources>',
-        ...Object.entries(full).map(([k,v])=>`  <color name="${toSnake(k)}">${v.toUpperCase()}</color>`),
-        ...customRoles.map(r=>`  <color name="${toSnake(r.name)}">${r.hex.toUpperCase()}</color>`),
-        '</resources>'];
-      return { text: lines.join('\n'), ext:'xml' };
+      const lines = [
+        '<?xml version="1.0" encoding="utf-8"?>',
+        '<resources>',
+        ...Object.entries(full).map(([k, v]) => `  <color name="${toSnake(k)}">${v.toUpperCase()}</color>`),
+        ...customRoles.map(r => `  <color name="${toSnake(r.name)}">${r.hex.toUpperCase()}</color>`),
+        '</resources>',
+      ];
+      return { text: lines.join('\n'), ext: 'xml' };
     }
     case 'tailwind': {
       const entries = [
-        ...Object.entries(full).map(([k,v])=>`        '${toKebab(k)}': '${v.toUpperCase()}',`),
-        ...customRoles.map(r=>`        '${toKebab(r.name)}': '${r.hex.toUpperCase()}',`),
+        ...Object.entries(full).map(([k, v]) => `        '${toKebab(k)}': '${v.toUpperCase()}',`),
+        ...customRoles.map(r => `        '${toKebab(r.name)}': '${r.hex.toUpperCase()}',`),
       ];
-      return { text: ['// Color Forge — Tailwind','module.exports = {','  theme: {','    extend: {','      colors: {',
-        ...entries,'      },','    },','  },','};'].join('\n'), ext:'js' };
+      return {
+        text: ['// Color Forge — Tailwind', 'module.exports = {', '  theme: {', '    extend: {',
+          '      colors: {', ...entries, '      },', '    },', '  },', '};'].join('\n'),
+        ext: 'js',
+      };
     }
-    default: return { text:'', ext:'txt' };
+    default: return { text: '', ext: 'txt' };
   }
 }
 
 function renderCodeTab() {
   const el = document.getElementById('codeOut');
-  switch(codeFmt) {
+  switch (codeFmt) {
     case 'css':      el.innerHTML = generateCSS();      break;
     case 'json':     el.innerHTML = generateJSON();     break;
     case 'android':  el.innerHTML = generateAndroid();  break;
@@ -495,7 +465,7 @@ function renderCodeTab() {
 
 function renderModalCode() {
   const el = document.getElementById('modalCodeOut');
-  switch(modalFmt) {
+  switch (modalFmt) {
     case 'css':      el.innerHTML = generateCSS();      break;
     case 'json':     el.innerHTML = generateJSON();     break;
     case 'android':  el.innerHTML = generateAndroid();  break;
@@ -505,64 +475,62 @@ function renderModalCode() {
 
 // ── EXPORT IMAGE ───────────────────────────────────────────────
 function exportImage() {
-  const full = getFullPalette();
-  const matEntries = [...GRID_CORE, ...GRID_SURFACE, ...GRID_ON]
-    .map(k => ({ key: k, hex: full[k], label: ROLE_LABELS[k] }));
-  const custEntries = customRoles.map(r => ({ key: r.name, hex: r.hex, label: r.name }));
-  const all = [...matEntries, ...custEntries];
+  const full        = getFullPalette();
+  const matEntries  = [...GRID_CORE, ...GRID_SURFACE, ...GRID_ON]
+    .map(k => ({ hex: full[k], label: ROLE_LABELS[k] }));
+  const custEntries = customRoles.map(r => ({ hex: r.hex, label: r.name }));
+  const all         = [...matEntries, ...custEntries];
 
   const COLS = 4, CW = 210, CH = 135, PAD = 22, TOP = 64;
   const rows = Math.ceil(all.length / COLS);
 
-  const canvas = document.createElement('canvas');
+  const canvas  = document.createElement('canvas');
   canvas.width  = COLS * CW + PAD * 2;
   canvas.height = rows * CH + PAD * 2 + TOP;
-  const ctx = canvas.getContext('2d');
+  const ctx     = canvas.getContext('2d');
 
   ctx.fillStyle = '#0f0f13';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   const titleEl   = document.getElementById('appTitle');
   const titleText = (titleEl ? titleEl.value.trim() : '') || 'Material Theme Builder';
-  ctx.fillStyle = '#f0f0f6';
-  ctx.font = 'bold 20px "Syne", sans-serif';
+  ctx.fillStyle   = '#f0f0f6';
+  ctx.font        = 'bold 20px sans-serif';
   ctx.fillText('Color Forge — ' + titleText, PAD, 38);
 
   all.forEach(({ hex, label }, i) => {
     const col = i % COLS;
     const row = Math.floor(i / COLS);
-    const x = PAD + col * CW;
-    const y = TOP + PAD + row * CH;
-    const on = onColor(hex);
+    const x   = PAD + col * CW;
+    const y   = TOP + PAD + row * CH;
+    const on  = onColor(hex);
 
-    // card
     rrFill(ctx, x, y, CW - 10, CH - 10, 12, hex);
 
-    // all text centered in card
     const cx = x + (CW - 10) / 2;
     const cy = y + (CH - 10) / 2;
 
-    ctx.textAlign = 'center';
+    ctx.textAlign    = 'center';
     ctx.textBaseline = 'middle';
 
-    ctx.font = 'bold 14px sans-serif';
+    ctx.font      = 'bold 14px sans-serif';
     ctx.fillStyle = on;
     ctx.fillText(label, cx, cy - 12);
 
-    ctx.font = '12px monospace';
+    ctx.font      = '12px monospace';
     ctx.fillStyle = on === '#FFFFFF' ? 'rgba(255,255,255,.75)' : 'rgba(0,0,0,.6)';
     ctx.fillText(hex.toUpperCase(), cx, cy + 8);
 
-    ctx.font = 'bold 10px monospace';
+    ctx.font      = 'bold 10px monospace';
     ctx.fillStyle = on === '#FFFFFF' ? 'rgba(255,255,255,.35)' : 'rgba(0,0,0,.2)';
     ctx.fillText('#' + (i + 1), cx, cy + 26);
 
     ctx.textBaseline = 'alphabetic';
   });
 
-  const a = document.createElement('a');
+  const a    = document.createElement('a');
   a.download = 'colorforge-theme.png';
-  a.href = canvas.toDataURL('image/png');
+  a.href     = canvas.toDataURL('image/png');
   a.click();
   showToast('Image exported!');
 }
@@ -570,12 +538,13 @@ function exportImage() {
 function rrFill(ctx, x, y, w, h, r, color) {
   ctx.fillStyle = color;
   ctx.beginPath();
-  ctx.moveTo(x+r,y);
-  ctx.lineTo(x+w-r,y); ctx.quadraticCurveTo(x+w,y,x+w,y+r);
-  ctx.lineTo(x+w,y+h-r); ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
-  ctx.lineTo(x+r,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r);
-  ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y);
-  ctx.closePath(); ctx.fill();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r); ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h); ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+  ctx.fill();
 }
 
 // ── PRESETS ────────────────────────────────────────────────────
@@ -625,8 +594,8 @@ function buildPresetGrid() {
 
   grid.querySelectorAll('.preset-card').forEach(card => {
     card.addEventListener('click', () => {
-      const name = card.dataset.name;
-      matTheme = { ...PRESETS[name] };
+      const name  = card.dataset.name;
+      matTheme    = { ...PRESETS[name] };
       autoVariant = { primaryVariant: false, secondaryVariant: false };
       renderAll();
       document.getElementById('presetFlyout').classList.add('hidden');
@@ -635,7 +604,7 @@ function buildPresetGrid() {
   });
 }
 
-// ── TOAST ──────────────────────────────────────────────────────
+// ── TOAST & COPY ───────────────────────────────────────────────
 let _toastTimer = null;
 function showToast(msg) {
   const el = document.getElementById('toast');
@@ -703,18 +672,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Add custom role
+  // Custom role
   document.getElementById('addRoleBtn').addEventListener('click', addCustomRole);
   document.getElementById('addRoleName').addEventListener('keydown', e => {
     if (e.key === 'Enter') addCustomRole();
   });
-
-  // Add swatch preview sync
   document.getElementById('addColorPicker').addEventListener('input', e => {
     document.getElementById('addSwatchPreview').style.setProperty('--sc', e.target.value);
   });
 
-  // Gradient pickers
+  // Gradient
   document.getElementById('gc1').addEventListener('input', e => {
     gradState.c1 = e.target.value;
     renderAll();
@@ -723,8 +690,6 @@ document.addEventListener('DOMContentLoaded', () => {
     gradState.c2 = e.target.value;
     renderAll();
   });
-
-  // Gradient directions
   document.getElementById('gradDirs').querySelectorAll('.gd').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.gd').forEach(b => b.classList.remove('active'));
@@ -733,8 +698,6 @@ document.addEventListener('DOMContentLoaded', () => {
       renderAll();
     });
   });
-
-  // Click grad bar to copy CSS
   document.getElementById('gradPreviewBar').addEventListener('click', () => {
     quickCopy(buildGradCSS(), null);
   });
@@ -758,14 +721,12 @@ document.addEventListener('DOMContentLoaded', () => {
       renderCodeTab();
     });
   });
-
-  // Code copy
   document.getElementById('codeCopyBtn').addEventListener('click', () => {
     const { text } = getRaw(codeFmt);
     navigator.clipboard.writeText(text).then(() => showToast('Code copied!'));
   });
 
-  // Header: Preset
+  // Presets
   const presetFlyout = document.getElementById('presetFlyout');
   document.getElementById('btnPreset').addEventListener('click', e => {
     e.stopPropagation();
@@ -773,10 +734,13 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('exportMenu').classList.add('hidden');
   });
 
-  // Header: Reset
+  // Reset
   document.getElementById('btnReset').addEventListener('click', () => {
-    matTheme = { primary:'#6200EE', primaryVariant:'#3700B3', secondary:'#03DAC6',
-      secondaryVariant:'#018786', background:'#FFFFFF', surface:'#FFFFFF', error:'#B00020' };
+    matTheme = {
+      primary:'#6200EE', primaryVariant:'#3700B3',
+      secondary:'#03DAC6', secondaryVariant:'#018786',
+      background:'#FFFFFF', surface:'#FFFFFF', error:'#B00020',
+    };
     customRoles = [];
     autoVariant = { primaryVariant: true, secondaryVariant: true };
     renderCustomRoleList();
@@ -784,10 +748,10 @@ document.addEventListener('DOMContentLoaded', () => {
     showToast('Theme reset');
   });
 
-  // Header: Export image
+  // Export image
   document.getElementById('btnExportImg').addEventListener('click', exportImage);
 
-  // Header: Export dropdown
+  // Export dropdown
   const exportMenu = document.getElementById('exportMenu');
   document.getElementById('btnExport').addEventListener('click', () => {
     modalFmt = 'css';
@@ -817,7 +781,12 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   [exportMenu, presetFlyout].forEach(el => el.addEventListener('click', e => e.stopPropagation()));
 
-  // Modal fmt tabs
+  // Modal
+  function syncModalTabs() {
+    document.querySelectorAll('.mfmt').forEach(t => {
+      t.classList.toggle('active', t.dataset.fmt === modalFmt);
+    });
+  }
   document.getElementById('modalFmtTabs').querySelectorAll('.mfmt').forEach(tab => {
     tab.addEventListener('click', () => {
       modalFmt = tab.dataset.fmt;
@@ -825,28 +794,19 @@ document.addEventListener('DOMContentLoaded', () => {
       renderModalCode();
     });
   });
-  function syncModalTabs() {
-    document.querySelectorAll('.mfmt').forEach(t => t.classList.toggle('active', t.dataset.fmt === modalFmt));
-  }
-
-  // Modal copy
   document.getElementById('modalCopy').addEventListener('click', () => {
     const { text } = getRaw(modalFmt);
     navigator.clipboard.writeText(text).then(() => showToast('Copied!'));
   });
-
-  // Modal download
   document.getElementById('modalDownload').addEventListener('click', () => {
     const { text, ext } = getRaw(modalFmt);
-    const blob = new Blob([text], { type:'text/plain' });
+    const blob = new Blob([text], { type: 'text/plain' });
     const url  = URL.createObjectURL(blob);
     const a    = document.createElement('a');
     a.href = url; a.download = `colorforge-theme.${ext}`; a.click();
     URL.revokeObjectURL(url);
     showToast('Downloaded!');
   });
-
-  // Modal close
   document.getElementById('modalClose').addEventListener('click', () => {
     document.getElementById('exportModal').classList.add('hidden');
   });
@@ -867,22 +827,51 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Title rename hint — shows every load, hides once user actually changes the value
+  // Title rename hint
   const titleInput = document.getElementById('appTitle');
   const titleHint  = document.getElementById('titleHint');
-  localStorage.removeItem('cf-title-seen'); // clear any stuck state
-
-  titleInput.addEventListener('input', () => {
-    titleHint.classList.add('hidden');
-  });
-  titleInput.addEventListener('blur', () => {
-    if (titleInput.value.trim() !== 'Material Theme Builder') {
+  if (titleInput && titleHint) {
+    titleInput.addEventListener('input', () => {
       titleHint.classList.add('hidden');
-    } else {
-      titleHint.classList.remove('hidden');
-    }
-  });
+    });
+    titleInput.addEventListener('blur', () => {
+      const val = titleInput.value.trim();
+      if (val === '' || val === 'Material Theme Builder') {
+        titleHint.classList.remove('hidden');
+      }
+    });
+  }
+
+  // Mobile sidebar drawer
+  const sidebar         = document.querySelector('.sidebar');
+  const backdrop        = document.getElementById('sidebarBackdrop');
+  const mobileColorsBtn = document.getElementById('mobileColorsBtn');
+
+  function openSidebar() {
+    sidebar.classList.add('open');
+    backdrop.classList.add('show');
+    if (mobileColorsBtn) mobileColorsBtn.style.display = 'none';
+  }
+  function closeSidebar() {
+    sidebar.classList.remove('open');
+    backdrop.classList.remove('show');
+    if (mobileColorsBtn) mobileColorsBtn.style.display = '';
+  }
+
+  if (mobileColorsBtn) mobileColorsBtn.addEventListener('click', openSidebar);
+  if (backdrop)        backdrop.addEventListener('click', closeSidebar);
+
+  let touchStartY = 0;
+  if (sidebar) {
+    sidebar.addEventListener('touchstart', e => {
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+    sidebar.addEventListener('touchend', e => {
+      if (e.changedTouches[0].clientY - touchStartY > 60) closeSidebar();
+    }, { passive: true });
+  }
 
   // Initial render
   renderAll();
+
 });
